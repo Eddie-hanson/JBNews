@@ -58,7 +58,8 @@ class Article(models.Model):
     picture = models.ImageField(
         upload_to="articles/pictures/%Y/%m/")  # homepage thumbnail
     picture_caption = models.CharField(max_length=255, blank=True)
-
+    # increments each time article is read
+    views = models.PositiveIntegerField(default=0)
     # Dates
     published_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
