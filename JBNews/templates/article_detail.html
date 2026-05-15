@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load static %}
+{% load news_extras %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'news:homepage' %}">Home</a></li>
+            {% if article.category %}
+            <li class="breadcrumb-item">
+                <a href="{% url 'news:category' slug=article.category.slug %}">
+                    {{ article.category.name }}
+                </a>
+            </li>
+            {% endif %}
+            <li class="breadcrumb-item active">{{ article.title|truncatewords:8 }}</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+
+<!-- Article Start -->
+<div class="article-detail">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <!-- ── Header ───────────────────────── -->
+                <div class="article-header">
+                    {% if article.category %}
+                    <a class="article-category"
+                       href="{% url 'news:category' slug=article.category.slug %}">
+                        {{ article.category.name }}
+                    </a>
+                    {% endif %}
+                    <h1 class="article-title">{{ article.title }}</h1>
+                    <div class="article-meta">
+                        <span class="article-time">
+                            <i class="far fa-clock"></i>
+                            {{ article.published_at|time_ago }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ── Featured Image ────────────────── -->
+                <div class="article-img">
+                    <img src="{{ article.picture.url }}" alt="{{ article.title }}" />
+                    {% if article.picture_caption %}
+                    <p class="article-img-caption">{{ article.picture_caption }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- ── Write-up ──────────────────────── -->
+                <div class="article-body">
+                    {{ article.write_up|linebreaks }}
+                </div>
+
+                <!-- ── Share Buttons ─────────────────── -->
+                <div class="article-share">
+                    <span>Share:</span>
+                    <a href="https://www.x.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}"
+                       target="_blank" title="Share on X">
+                        <i class="a-brands fa-x-twitter"></i>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+                       target="_blank" title="Share on Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ article.title|urlencode }}"
+                       target="_blank" title="Share on LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="whatsapp://send?text={{ article.title|urlencode }}%20{{ request.build_absolute_uri }}"
+                       target="_blank" title="Share on WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}');
+                                        this.title='Copied!'" title="Copy link">
+                        <i class="fas fa-link"></i>
+                    </a>
+                </div>
+
+                <!-- ── Related Articles ───────────────── -->
+                {% if related_articles %}
+                <div class="article-related">
+                    <h2><i class="fas fa-align-justify"></i> Related Articles</h2>
+                    <div class="row">
+                        {% for related in related_articles %}
+                        <div class="col-md-3 col-sm-6">
+                            <div class="related-card">
+                                <div class="related-img">
+                                    <img src="{{ related.picture.url }}"
+                                         alt="{{ related.title }}" />
+                                </div>
+                                <div class="related-content">
+                                    <a class="related-title"
+                                       href="{% url 'news:article_detail' slug=related.slug %}">
+                                        {{ related.title }}
+                                    </a>
+                                    <span class="related-date">
+                                        <i class="far fa-clock"></i>
+                                        {{ related.published_at|time_ago }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ── Comments ──────────────────────── -->
+                <div class="article-comments">
+                    <h2><i class="fas fa-align-justify"></i>
+                        Comments ({{ comments.count }})
+                    </h2>
+
+                    <!-- Existing approved comments -->
+                    {% for comment in comments %}
+                    <div class="comment-item">
+                        <div class="comment-meta">
+                            <span class="comment-author">
+                                <i class="far fa-user"></i> {{ comment.name }}
+                            </span>
+                            <span class="comment-date">
+                                <i class="far fa-clock"></i>
+                                {{ comment.created_at|time_ago }}
+                            </span>
+                        </div>
+                        <p class="comment-body">{{ comment.body }}</p>
+                    </div>
+                    {% empty %}
+                    <p class="no-comments">
+                        No comments yet. Be the first to comment below.
+                    </p>
+                    {% endfor %}
+
+                    <!-- Success message -->
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <!-- Comment form -->
+                    <div class="comment-form">
+                        <h3>Leave a Comment</h3>
+                        <form method="POST"
+                              action="{% url 'news:article_detail' slug=article.slug %}">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    {{ comment_form.name }}
+                                    {% if comment_form.name.errors %}
+                                    <small class="text-danger">
+                                        {{ comment_form.name.errors|join:", " }}
+                                    </small>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ comment_form.email }}
+                                    {% if comment_form.email.errors %}
+                                    <small class="text-danger">
+                                        {{ comment_form.email.errors|join:", " }}
+                                    </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ comment_form.body }}
+                                {% if comment_form.body.errors %}
+                                <small class="text-danger">
+                                    {{ comment_form.body.errors|join:", " }}
+                                </small>
+                                {% endif %}
+                            </div>
+                            <button class="btn" type="submit">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Comments End -->
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Article End -->
+
+{% endblock %}
