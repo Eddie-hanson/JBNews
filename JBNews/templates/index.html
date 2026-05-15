@@ -3,83 +3,81 @@
   
 {% extends "base.html" %} {% load static %}
 <!-- dsfghjkl -->
-{% block title %} Home page {%endblock %}
+{% block title %} Homepage {%endblock %}
 <!-- dsfghjkl -->
 {% block content %}
-<!-- <div>
+<!-- <div>-->
 
 
         <!-- Top News Start-->
-        <div class="top-news">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6 tn-left">
-                        <div class="tn-img">
-                            <img src="{% static 'img/top-news-1.jpg'%}" />
-                            <div class="tn-content">
-                                <div class="tn-content-inner">
-                                    <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                    <a class="tn-title" href="">Lorem ipsum dolor sit amet adipiscing elit</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 tn-right">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="tn-img">
-                                    <img src="{% static 'img/top-news-2.jpg'%}" />
-                                    <div class="tn-content">
-                                        <div class="tn-content-inner">
-                                            <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            <a class="tn-title" href="">Integer faucibus pharetra odio</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="tn-img">
-                                    <img src="{% static 'img/top-news-3.jpg'%}" />
-                                    <div class="tn-content">
-                                        <div class="tn-content-inner">
-                                            <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            <a class="tn-title" href="">Nulla vitae pharetra ligula</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="tn-img">
-                                    <img src="{% static 'img/top-news-4.jpg'%}" />
-                                    <div class="tn-content">
-                                        <div class="tn-content-inner">
-                                            <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            <a class="tn-title" href="">Ut ac euismod tellus a blandit</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="tn-img">
-                                    <img src="{% static 'img/top-news-5.jp'%}g" />
-                                    <div class="tn-content">
-                                        <div class="tn-content-inner">
-                                            <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            <a class="tn-title" href="">Cras ac egestas sem nec euismod</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        
+<div class="top-news">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="row align-stretch">
+
+            <!-- LEFT: Breaking Article -->
+            <div class="col-md-6 tn-left">
+                {% if breaking_article %}
+                <div class="tn-img">
+                    <img src="{{ breaking_article.picture.url }}" alt="{{ breaking_article.title }}" />
+                    <div class="tn-content">
+                        <div class="tn-content-inner">
+                            <a class="tn-date" href="#">
+                                <i class="far fa-clock"></i>
+                                {{ breaking_article.published_at|date:"d M Y" }}
+                            </a>
+                            <a class="tn-title" href="{% url 'news:article_detail' slug=breaking_article.slug %}">
+                                {{ breaking_article.title }}
+                            </a>
                         </div>
                     </div>
                 </div>
+                {% else %}
+                <!-- Fallback: show nothing or a placeholder when no breaking news is set -->
+                <div class="tn-img tn-placeholder">
+                    <p>No breaking news at the moment.</p>
+                </div>
+                {% endif %}
             </div>
+
+            <!-- RIGHT: Top Story Cards (up to 4) -->
+            <div class="col-md-6 tn-right">
+                <div class="row">
+                    {% for article in top_stories %}
+                    <div class="col-md-6">
+                        <div class="tn-img">
+                            <img src="{{ article.picture.url }}" alt="{{ article.title }}" />
+                            <div class="tn-content">
+                                <div class="tn-content-inner">
+                                    <a class="tn-date" href="#">
+                                        <i class="far fa-clock"></i>
+                                        {{ article.published_at|date:"d M Y" }}
+                                    </a>
+                                    <a class="tn-title" href="{% url 'news:article_detail' slug=article.slug %}">
+                                        {{ article.title }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p>No top stories available.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+</div>
         </div>
+    </div>
+</div>
+<!-- Top News End-->
         <!-- Top News End-->
 
 
         <!-- Category News Start-->
-        <div class="cat-news">
+        {% comment %} <div class="cat-news">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
@@ -160,12 +158,63 @@
                     </div>
                 </div>
             </div>
+        </div> {% endcomment %}
+
+        <!-- Category News Start-->
+<div class="cat-news">
+    <div class="container-fluid">
+        <div class="row">
+
+            {% for category in featured_categories %}
+            <div class="col-md-6">
+
+                <!-- Category title from backend -->
+                <h2>
+                    <i class="fas fa-align-justify"></i>
+                    <a href="{% url 'news:category' slug=category.slug %}">
+                        {{ category.name }}
+                    </a>
+                </h2>
+
+                <!-- Slider: only articles marked is_featured for this category -->
+                <div class="row cn-slider">
+                    {% for article in category.featured_articles %}
+                    <div class="col-md-6">
+                        <div class="cn-img">
+                            <img src="{{ article.picture.url }}" alt="{{ article.title }}" />
+                            <div class="cn-content">
+                                <div class="cn-content-inner">
+                                    <a class="cn-date" href="#">
+                                        <i class="far fa-clock"></i>
+                                        {{ article.published_at|date:"d M Y" }}
+                                    </a>
+                                    <a class="cn-title"
+                                       href="{% url 'news:article_detail' slug=article.slug %}">
+                                        {{ article.title }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p>No featured articles in this category yet.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% endfor %}
+
         </div>
+    </div>
+</div>
+<!-- Category News End-->
         <!-- Category News End-->
 
 
         <!-- Category News Start-->
-        <div class="cat-news">
+        {% comment %} <div class="cat-news">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
@@ -246,7 +295,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
         <!-- Category News End-->
 
 
@@ -393,34 +442,26 @@
                                 <h2><i class="fas fa-align-justify"></i>Category</h2>
                                 <div class="category">
                                     <ul class="fa-ul">
-                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="">National</a></li>
-                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="">International</a></li>
-                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="">Economics</a></li>
-                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="">Politics</a></li>
-                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="">Lifestyle</a></li>
-                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="">Technology</a></li>
-                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="">Trades</a></li>
-                                    </ul>
+                                        {% for category in all_categories %}
+                                        <li><span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span><a href="{% url 'news:category' slug=category.slug %}">{{ category.name }}</a></li>
+                                        {% empty %}
+                                        <li>No categories yet</li>
+                                          {% endfor %}
+                    
+                                       </ul>
                                 </div>
                             </div>
 
                             <div class="sidebar-widget">
                                 <h2><i class="fas fa-align-justify"></i>Tags</h2>
                                 <div class="tags">
-                                    <a href="">National</a>
-                                    <a href="">International</a>
-                                    <a href="">Economics</a>
-                                    <a href="">Politics</a>
-                                    <a href="">Lifestyle</a>
-                                    <a href="">Technology</a>
-                                    <a href="">Trades</a>
-                                    <a href="">National</a>
-                                    <a href="">International</a>
-                                    <a href="">Economics</a>
-                                    <a href="">Politics</a>
-                                    <a href="">Lifestyle</a>
-                                    <a href="">Technology</a>
-                                    <a href="">Trades</a>
+                                    {% for category in all_categories %}
+                                     <a href="{% url 'news:category' slug=category.slug %}">
+                             {{ category.name }}
+                                    </a>
+                                {% empty %}
+                                                            <p>No tags yet.</p>
+                                {% endfor %}
                                 </div>
                             </div>
 
