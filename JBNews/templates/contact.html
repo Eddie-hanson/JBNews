@@ -23,7 +23,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-4">
                         <h5>Receive messages instantly with our PHP and Ajax contact form - available in the <a href="https://htmlcodex.com/downloading/?item=456">Pro Version</a> only.</h5>
-                        <div class="form">
+                        {% comment %} <div class="form">
                             <form>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
@@ -41,7 +41,51 @@
                                 </div>
                                 <div><button class="btn" type="submit">Send Message</button></div>
                             </form>
-                        </div>
+                        </div> {% endcomment %}
+
+<div class="form">
+    <form method="POST" action="{% url 'news:contact' %}">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.name }}
+                {% if form.name.errors %}
+                <small class="text-danger">{{ form.name.errors|join:", " }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.email }}
+                {% if form.email.errors %}
+                <small class="text-danger">{{ form.email.errors|join:", " }}</small>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.subject }}
+            {% if form.subject.errors %}
+            <small class="text-danger">{{ form.subject.errors|join:", " }}</small>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.message }}
+            {% if form.message.errors %}
+            <small class="text-danger">{{ form.message.errors|join:", " }}</small>
+            {% endif %}
+        </div>
+
+        <!-- Success message -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success mb-3">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <div>
+            <button class="btn" type="submit">Send Message</button>
+        </div>
+    </form>
+</div>
+
                     </div>
                     <div class="col-md-4">
                         <div class="map">
@@ -49,7 +93,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="contact-info">
+                        {% comment %} <div class="contact-info">
                             <h3>Get in Touch</h3>
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. In condimentum quam ac mi viverra dictum. In efficitur ipsum diam, at dignissim lorem tempor in. Vivamus tempor hendrerit finibus.
@@ -64,7 +108,44 @@
                                 <a href=""><i class="fab fa-instagram"></i></a>
                                 <a href=""><i class="fab fa-youtube"></i></a>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
+
+                        <div class="contact-info">
+    <h3>Get in Touch</h3>
+    <p>{{ site_contact.description }}</p>
+
+    <h4><i class="fa fa-map-marker"></i> {{ site_contact.address }}</h4>
+    <h4><i class="fa fa-envelope"></i> {{ site_contact.email }}</h4>
+    <h4><i class="fa fa-phone"></i> {{ site_contact.phone }}</h4>
+
+    <div class="social">
+        {% if site_contact.twitter %}
+        <a href="{{ site_contact.twitter }}" target="_blank">
+            <i class="fab fa-twitter"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.facebook %}
+        <a href="{{ site_contact.facebook }}" target="_blank">
+            <i class="fab fa-facebook"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.linkedin %}
+        <a href="{{ site_contact.linkedin }}" target="_blank">
+            <i class="fab fa-linkedin"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.instagram %}
+        <a href="{{ site_contact.instagram }}" target="_blank">
+            <i class="fab fa-instagram"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.youtube %}
+        <a href="{{ site_contact.youtube }}" target="_blank">
+            <i class="fab fa-youtube"></i>
+        </a>
+        {% endif %}
+    </div>
+</div>
                     </div>
                 </div>
             </div>
