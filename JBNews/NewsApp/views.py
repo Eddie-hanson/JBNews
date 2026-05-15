@@ -16,7 +16,7 @@ from django.shortcuts import render
 
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, DetailView
-from django.db.models import Prefetch                      # ← was missing
+from django.db.models import Prefetch, F
 from .models import Article, Category
 
 
@@ -73,6 +73,22 @@ class HomepageView(TemplateView):
             )
             .distinct()
         )
+        latest_published = Article.objects.filter(
+            status=Article.Status.PUBLISHED
+        ).order_by("-published_at")
+
+        context["latest_main"] = latest_published.first()       # big left card
+        # 5 smaller right items
+        context["latest_list"] = latest_published[1:6]
+
+        # --- Section 4: Popular News (1 featured left + 5 list right) ---
+        popular_published = Article.objects.filter(
+            status=Article.Status.PUBLISHED
+            # most viewed first
+        ).order_by("-views")
+
+        context["popular_main"] = popular_published.first()      # big left card
+        context["popular_list"] = popular_published[1:6]
 
         # --- Navbar: all categories (for the dropdown) ---
         context["all_categories"] = Category.objects.all()
@@ -94,6 +110,13 @@ class ArticleDetailView(DetailView):
     def get_queryset(self):
         # Only published articles are publicly accessible
         return Article.objects.filter(status=Article.Status.PUBLISHED)
+
+    def get_object(self):
+        obj = super().get_object()
+        # Increment view count every time the article page is opened
+        Article.objects.filter(pk=obj.pk).update(views=F("views") + 1)
+        obj.refresh_from_db()
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
