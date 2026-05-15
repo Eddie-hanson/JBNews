@@ -1,3 +1,4 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -8,7 +9,7 @@
         <meta content="Bootstrap Ecommerce Template Free Download" name="description">
 
         <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
+        <link href="{% static 'img/favicon.ico'%}" rel="icon">
 
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
@@ -20,7 +21,7 @@
         <link href="lib/slick/slick-theme.css" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="{% static 'css/style.css'%}" rel="stylesheet">
     </head>
 
     <body>
@@ -31,7 +32,7 @@
                     <div class="col-lg-3 col-md-4">
                         <div class="logo">
                             <a href="">
-                                <img src="img/logo.png" alt="Logo">
+                                <img src="{% static 'img/logo.png'%}" alt="Logo">
                             </a>
                         </div>
                     </div>
@@ -249,11 +250,11 @@
         <!-- JavaScript Libraries -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/slick/slick.min.js"></script>
+        <script src="{% static 'lib/easing/easing.min.js'%}"></script>
+        <script src="{% static 'lib/slick/slick.min.js'%}"></script>
 
 
         <!-- Template Javascript -->
-        <script src="js/main.js"></script>
+        <script src="{% static 'js/main.js'%}"></script>
     </body>
 </html>
