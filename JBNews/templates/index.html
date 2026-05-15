@@ -1,14 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>JB News </title>
+        <title>{% block title %}JB News{% endblock %} </title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="Bootstrap Ecommerce Template" name="keywords">
         <meta content="Bootstrap Ecommerce Template Free Download" name="description">
 
         <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
+        <link href="{% static 'img/favicon.ico'%}" rel="icon">
 
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
@@ -16,11 +17,11 @@
         <!-- CSS Libraries -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="lib/slick/slick.css" rel="stylesheet">
-        <link href="lib/slick/slick-theme.css" rel="stylesheet">
+        <link href="{% static 'lib/slick/slick.css'%}" rel="stylesheet">
+        <link href="{% static 'lib/slick/slick-theme.css'%}" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="{% static 'css/style.css'%}" rel="stylesheet">
     </head>
 
     <body>
@@ -31,7 +32,7 @@
                     <div class="col-lg-3 col-md-4">
                         <div class="logo">
                             <a href="">
-                                <img src="img/Jbnew_logo (1).jpeg" alt="Logo">
+                                <img src="{% static 'img/Jbnew_logo (1).jpeg'%}" alt="Logo">
                             </a>
                         </div>
                     </div>
@@ -79,7 +80,7 @@
                                 </div>
                             </div>
                             <a href="#" class="nav-item nav-link">Single Page</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact Us</a>
+                            <a href="{% url 'contact' %}" class="nav-item nav-link">Contact Us</a>
                         </div>
                     </div>
                 </nav>
@@ -94,7 +95,7 @@
                 <div class="row">
                     <div class="col-md-6 tn-left">
                         <div class="tn-img">
-                            <img src="img/top-news-1.jpg" />
+                            <img src="{% static 'img/top-news-1.jpg'%}" />
                             <div class="tn-content">
                                 <div class="tn-content-inner">
                                     <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -107,7 +108,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="tn-img">
-                                    <img src="img/top-news-2.jpg" />
+                                    <img src="{% static 'img/top-news-2.jpg'%}" />
                                     <div class="tn-content">
                                         <div class="tn-content-inner">
                                             <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -118,7 +119,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="tn-img">
-                                    <img src="img/top-news-3.jpg" />
+                                    <img src="{% static 'img/top-news-3.jpg'%}" />
                                     <div class="tn-content">
                                         <div class="tn-content-inner">
                                             <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -129,7 +130,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="tn-img">
-                                    <img src="img/top-news-4.jpg" />
+                                    <img src="{% static 'img/top-news-4.jpg'%}" />
                                     <div class="tn-content">
                                         <div class="tn-content-inner">
                                             <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -140,7 +141,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="tn-img">
-                                    <img src="img/top-news-5.jpg" />
+                                    <img src="{% static 'img/top-news-5.jp'%}g" />
                                     <div class="tn-content">
                                         <div class="tn-content-inner">
                                             <a class="tn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -166,7 +167,7 @@
                         <div class="row cn-slider">
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-1.jpg" />
+                                    <img src="{% static 'img/cat-news-1.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -177,7 +178,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-2.jpg" />
+                                    <img src="{% static 'img/cat-news-2.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -188,7 +189,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-3.jpg" />
+                                    <img src="{% static 'img/cat-news-3.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -204,7 +205,7 @@
                         <div class="row cn-slider">
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-4.jpg" />
+                                    <img src="{% static 'img/cat-news-4.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -215,7 +216,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-5.jpg" />
+                                    <img src="{% static 'img/cat-news-5.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -226,7 +227,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-6.jpg" />
+                                    <img src="{% static 'img/cat-news-6.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -252,7 +253,7 @@
                         <div class="row cn-slider">
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-7.jpg" />
+                                    <img src="{% static 'img/cat-news-7.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -263,7 +264,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-8.jpg" />
+                                    <img src="{% static 'img/cat-news-8.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -274,7 +275,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-9.jpg" />
+                                    <img src="{% static 'img/cat-news-9.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -290,7 +291,7 @@
                         <div class="row cn-slider">
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-10.jpg" />
+                                    <img src="{% static 'img/cat-news-10.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -301,7 +302,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-11.jpg" />
+                                    <img src="{% static 'img/cat-news-11.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -312,7 +313,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="cn-img">
-                                    <img src="img/cat-news-12.jpg" />
+                                    <img src="{% static 'img/cat-news-12.jpg'%}" />
                                     <div class="cn-content">
                                         <div class="cn-content-inner">
                                             <a class="cn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
@@ -340,7 +341,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="mn-img">
-                                            <img src="img/latest-news.jpg" />
+                                            <img src="{% static 'img/latest-news.jpg'%}" />
                                         </div>
                                         <div class="mn-content">
                                             <a class="mn-title" href="">Cras commodo sem ut porta laoreet</a>
@@ -353,7 +354,7 @@
                                     <div class="col-lg-6">
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/latest-news.jpg" />
+                                                <img src="{% static 'img/latest-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Pellentesque sit amet rutrum lacus</a>
@@ -362,7 +363,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/latest-news.jpg" />
+                                                <img src="{% static 'img/latest-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Proin id pretium orci, quis rhoncus eros</a>
@@ -371,7 +372,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/latest-news.jpg" />
+                                                <img src="{% static 'img/latest-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Curabitur viverra scelerisque tempor</a>
@@ -380,7 +381,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/latest-news.jpg" />
+                                                <img src="{% static 'img/latest-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Integer nec lorem facilisis interdum lorem non</a>
@@ -389,7 +390,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/latest-news.jpg" />
+                                                <img src="{% static 'img/latest-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Interdum et malesuada fames</a>
@@ -404,7 +405,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="mn-img">
-                                            <img src="img/popular-news.jpg" />
+                                            <img src="{% static 'img/popular-news.jpg'%}" />
                                         </div>
                                         <div class="mn-content">
                                             <a class="mn-title" href="">Phasellus gravida metus vitae laoreet aliquam</a>
@@ -417,7 +418,7 @@
                                     <div class="col-lg-6">
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/popular-news.jpg" />
+                                                <img src="{% static 'img/popular-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Nullam risus ante sempe</a>
@@ -426,7 +427,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/popular-news.jpg" />
+                                                <img src="{% static 'img/popular-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Pellentesque ultrices quam id ipsum tempor</a>
@@ -435,7 +436,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/popular-news.jpg" />
+                                                <img src="{% static 'img/popular-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Nam ex magna, commodo sed turpis rutrum</a>
@@ -444,7 +445,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/popular-news.jpg" />
+                                                <img src="{% static 'img/popular-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Aliquam condimentum metus</a>
@@ -453,7 +454,7 @@
                                         </div>
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="img/popular-news.jpg" />
+                                                <img src="{% static 'img/popular-news.jpg'%}" />
                                             </div>
                                             <div class="mn-content">
                                                 <a class="mn-title" href="">Ut ornare rutrum ligula erat volutpat</a>
@@ -506,7 +507,7 @@
                             <div class="sidebar-widget">
                                 <h2><i class="fas fa-align-justify"></i>Ads 1 column</h2>
                                 <div class="image">
-                                    <a href=""><img src="img/adds-1.jpg" alt="Image"></a>
+                                    <a href=""><img src="{% static 'img/adds-1.jpg'%}" alt="Image"></a>
                                 </div>
                             </div>
 
@@ -515,10 +516,10 @@
                                 <div class="image">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <a href=""><img src="img/adds-2.jpg" alt="Image"></a>
+                                            <a href=""><img src="{% static 'img/adds-2.jpg'%}" alt="Image"></a>
                                         </div>
                                         <div class="col-sm-6">
-                                            <a href=""><img src="img/adds-2.jpg" alt="Image"></a>
+                                            <a href=""><img src="{% static 'img/adds-2.jpg'%}" alt="Image"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -625,11 +626,11 @@
         <!-- JavaScript Libraries -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/slick/slick.min.js"></script>
+        <script src="{% static 'lib/easing/easing.min.js'%}"></script>
+        <script src="{% static 'lib/slick/slick.min.js'%}"></script>
 
 
         <!-- Template Javascript -->
-        <script src="js/main.js"></script>
+        <script src="{% static 'js/main.js'%}"></script>
     </body>
 </html>
