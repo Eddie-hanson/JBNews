@@ -309,133 +309,83 @@
                                 <h2><i class="fas fa-align-justify"></i>Latest News</h2>
                                 <div class="row">
                                     <div class="col-lg-6">
+                                         {% if latest_main %}
                                         <div class="mn-img">
-                                            <img src="{% static 'img/latest-news.jpg'%}" />
+                                            <img src="{{ latest_main.picture.url }}"
+                             alt="{{ latest_main.title }}" />
                                         </div>
                                         <div class="mn-content">
-                                            <a class="mn-title" href="">Cras commodo sem ut porta laoreet</a>
-                                            <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed porta dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra inceptos...
-                                            </p>
+                                            <a class="mn-title" href="{% url 'news:article_detail' slug=latest_main.slug %}">
+                            {{ latest_main.title }}</a>
+                                            <a class="mn-date" href=""><i class="far fa-clock"></i>{{ latest_main.published_at|date:"d M Y" }}
+                        </a>
+                                            <p> {{ latest_main.excerpt }}</p>
                                         </div>
+                                         {% endif %}
                                     </div>
                                     <div class="col-lg-6">
+                                        {% for article in latest_list %}
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="{% static 'img/latest-news.jpg'%}" />
+                                                <img src="{{ article.picture.url }}"
+                                 alt="{{ article.title }}" />
                                             </div>
                                             <div class="mn-content">
-                                                <a class="mn-title" href="">Pellentesque sit amet rutrum lacus</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
+                                                <a class="mn-title"href="{% url 'news:article_detail' slug=article.slug %}">
+                                {{ article.title }}</a>
+                                                <a class="mn-date" href=""><i class="far fa-clock"></i> {{ article.published_at|date:"d M Y" }}</a>
                                             </div>
                                         </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/latest-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Proin id pretium orci, quis rhoncus eros</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/latest-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Curabitur viverra scelerisque tempor</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/latest-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Integer nec lorem facilisis interdum lorem non</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/latest-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Interdum et malesuada fames</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
+                                        
+                                        {% empty %}
+                    <p>No latest news available.</p>
+                    {% endfor %}
                                     </div>
                                 </div>
                             </div>
+                            <!-- ── Popular News ───────────────────── -->
                             <div class="col-md-12">
                                 <h2><i class="fas fa-align-justify"></i>Popular News</h2>
                                 <div class="row">
+                                    <!-- Big left card -->
                                     <div class="col-lg-6">
+                                        {% if popular_main %}
                                         <div class="mn-img">
-                                            <img src="{% static 'img/popular-news.jpg'%}" />
+                                            <img src="{{ popular_main.picture.url }}"
+                            alt="{{ popular_main.title }}" />
                                         </div>
                                         <div class="mn-content">
-                                            <a class="mn-title" href="">Phasellus gravida metus vitae laoreet aliquam</a>
-                                            <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
+                                            <a class="mn-title"   href="{% url 'news:article_detail' slug=popular_main.slug %}">
+                            {{ popular_main.title }}</a>
+                                            <a class="mn-date" href=""><i class="far fa-clock"></i>{{ popular_main.published_at|date:"d M Y" }}</a>
                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed porta dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra inceptos...
+                                                {{ popular_main.excerpt }}
                                             </p>
                                         </div>
+                                        {% endif %}
                                     </div>
+                                    <!-- 5 item list on the right -->
                                     <div class="col-lg-6">
+                                        {% for article in popular_list %}
                                         <div class="mn-list">
                                             <div class="mn-img">
-                                                <img src="{% static 'img/popular-news.jpg'%}" />
+                                                <img src="{{ article.picture.url }}"
+                                 alt="{{ article.title }}" />
                                             </div>
                                             <div class="mn-content">
-                                                <a class="mn-title" href="">Nullam risus ante sempe</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
+                                                <a class="mn-title" href="{% url 'news:article_detail' slug=article.slug %}">
+                                {{ article.title }}</a>
+                                                <a class="mn-date" href=""><i class="far fa-clock"></i>{{ article.published_at|date:"d M Y" }}</a>
                                             </div>
                                         </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/popular-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Pellentesque ultrices quam id ipsum tempor</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/popular-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Nam ex magna, commodo sed turpis rutrum</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/popular-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Aliquam condimentum metus</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
-                                        <div class="mn-list">
-                                            <div class="mn-img">
-                                                <img src="{% static 'img/popular-news.jpg'%}" />
-                                            </div>
-                                            <div class="mn-content">
-                                                <a class="mn-title" href="">Ut ornare rutrum ligula erat volutpat</a>
-                                                <a class="mn-date" href=""><i class="far fa-clock"></i>26-Apr-2026</a>
-                                            </div>
-                                        </div>
+                                        {% empty %}
+                    <p>No popular news available.</p>
+                    {% endfor %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-4">
                         <div class="sidebar">
                             <div class="sidebar-widget">
