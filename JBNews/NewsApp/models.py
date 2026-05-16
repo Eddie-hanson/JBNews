@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 # Create your models here.
@@ -216,3 +217,20 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.name} on {self.article.title}"
+
+
+# models.py
+
+
+class NewsletterSubscriber(models.Model):
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+    # for unsubscribe link
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-subscribed_at"]
+
+    def __str__(self):
+        return self.email
