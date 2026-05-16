@@ -1,7 +1,4 @@
-from .models import ContactMessage, Article, Category, SiteContact, Article, Category
-from .forms import ContactForm, CommentForm
-from django.contrib import messages
-from django.shortcuts import render
+
 # TODO:Replce dropdown with Category and make it dynamic from the backend
 # TODO:Each news --> Title Cat write up date picture
 # TODO:Create a page for read only where the link of an article leads to
@@ -9,18 +6,13 @@ from django.shortcuts import render
 # TODO: The hompage will only show the picture and title with link embedded leading to the article
 # TODO: Homepage will have a section that shows the news under various cat using a slider
 
-
-# Create your views here.sss
-
-from django.shortcuts import render
-
-
-# news/views.py
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, DetailView
 from django.db.models import Prefetch, F
-from .models import Article, Category
+from django.contrib import messages
+from django.shortcuts import redirect
+from .forms import ContactForm, CommentForm, NewsletterForm
+from .models import ContactMessage, SiteContact, Article, Category, NewsletterSubscriber
 
 
 # ─────────────────────────────────────────
@@ -95,6 +87,7 @@ class HomepageView(TemplateView):
         context["nav_categories"] = Category.objects.filter(show_in_nav=True)
         # --- Navbar: all categories (for the dropdown) ---
         context["all_categories"] = Category.objects.all()
+        context["site_contact"] = SiteContact.get()
 
         return context
 
@@ -139,6 +132,7 @@ class ArticleDetailView(DetailView):
         context["comment_form"] = CommentForm()
         context["nav_categories"] = Category.objects.filter(show_in_nav=True)
         context["all_categories"] = Category.objects.all()
+        context["site_contact"] = SiteContact.get()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -188,6 +182,7 @@ class CategoryView(TemplateView):
         # for navbar dropdown
         context["nav_categories"] = Category.objects.filter(show_in_nav=True)
         context["all_categories"] = Category.objects.all()
+        context["site_contact"] = SiteContact.get()
 
         return context
 
@@ -201,6 +196,7 @@ class ContactView(TemplateView):
         context["form"] = ContactForm()
         context["nav_categories"] = Category.objects.filter(show_in_nav=True)
         context["all_categories"] = Category.objects.all()
+        context["site_contact"] = SiteContact.get()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -227,6 +223,7 @@ class ContactView(TemplateView):
         context["site_contact"] = SiteContact.get()   # ← add this
         context["nav_categories"] = Category.objects.filter(show_in_nav=True)
         context["all_categories"] = Category.objects.all()
+        context["site_contact"] = SiteContact.get()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -240,3 +237,44 @@ class ContactView(TemplateView):
             "site_contact":   SiteContact.get(),        # ← add this
             "all_categories": Category.objects.all(),
         })
+
+
+# views.py
+
+
+def subscribe(request):
+    if request.method == "POST":
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            # Re-activate if they previously unsubscribed
+            obj, created = NewsletterSubscriber.objects.get_or_create(
+                email=email,
+                defaults={"is_active": True}
+            )
+            if not created and not obj.is_active:
+                obj.is_active = True
+                obj.save()
+                messages.success(
+                    request, "Welcome back! You have been re-subscribed.")
+            elif created:
+                messages.success(
+                    request, "You have successfully subscribed to our newsletter.")
+            else:
+                messages.info(request, "You are already subscribed.")
+        else:
+            messages.error(request, "Please enter a valid email address.")
+
+    # Redirect back to whatever page they were on
+    return redirect(request.META.get("HTTP_REFERER", "/"))
+
+
+def unsubscribe(request, token):
+    try:
+        subscriber = NewsletterSubscriber.objects.get(token=token)
+        subscriber.is_active = False
+        subscriber.save()
+        messages.success(request, "You have been unsubscribed successfully.")
+    except NewsletterSubscriber.DoesNotExist:
+        messages.error(request, "Invalid unsubscribe link.")
+    return redirect("news:homepage")
