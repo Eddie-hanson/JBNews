@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils import timezone
 from django.db import models as db_models
-from .models import Article, Category
+from .models import Article, Category, ContactMessage, SiteContact, Comment
 
 # Register your models here.
 
@@ -218,3 +218,46 @@ class ArticleAdmin(admin.ModelAdmin):
             t_count=top_story_count,
         )
     homepage_slot_summary.short_description = "Homepage Slot Availability"
+
+# admin.py — add this
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "subject", "status", "submitted_at")
+    list_filter = ("status",)
+    search_fields = ("name", "email", "subject", "message")
+    readonly_fields = ("name", "email", "subject", "message", "submitted_at")
+    list_editable = ("status",)   # mark read/replied directly from the list
+
+# admin.py — add this
+
+
+@admin.register(SiteContact)
+class SiteContactAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ("Contact Details", {
+            "fields": ("description", "address", "email", "phone")
+        }),
+        ("Social Media Links", {
+            "fields": ("twitter", "facebook", "linkedin", "instagram", "youtube"),
+            "description": "Leave blank to hide that icon on the contact page."
+        }),
+    )
+
+    def has_add_permission(self, request):
+        # Prevent a second row from ever being created
+        return not SiteContact.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        # Prevent deletion — always keep the one row
+        return False
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "article", "approved", "created_at")
+    list_filter = ("approved",)
+    list_editable = ("approved",)   # approve/reject directly from the list
+    search_fields = ("name", "email", "body")
+    readonly_fields = ("name", "email", "body", "article", "created_at")
