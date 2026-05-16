@@ -14,6 +14,10 @@ class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
     description = models.TextField(blank=True)
+    show_in_nav = models.BooleanField(
+        default=False,
+        help_text="Tick to show this category in the navigation bar."
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -124,3 +128,91 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# models.py — add below Article model
+
+class ContactMessage(models.Model):
+
+    class Status(models.TextChoices):
+        UNREAD = "unread",  "Unread"
+        READ = "read",    "Read"
+        REPLIED = "replied", "Replied"
+
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.UNREAD
+    )
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-submitted_at"]
+
+    def __str__(self):
+        return f"{self.subject} — {self.name} ({self.email})"
+
+
+# models.py — add below ContactMessage
+
+class SiteContact(models.Model):
+    address = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30)
+    description = models.TextField(
+        help_text="The paragraph shown under 'Get in Touch'"
+    )
+
+    # Social links — all optional
+    twitter = models.URLField(blank=True)
+    facebook = models.URLField(blank=True)
+    linkedin = models.URLField(blank=True)
+    instagram = models.URLField(blank=True)
+    youtube = models.URLField(blank=True)
+
+    class Meta:
+        verbose_name = "Site Contact Info"
+        verbose_name_plural = "Site Contact Info"   # hides the default "s" in admin
+
+    def __str__(self):
+        return "Site Contact Info"
+
+    def save(self, *args, **kwargs):
+        # Enforce single row — always reuse pk=1
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get(cls):
+        # Safe getter — returns the row or a blank default if not set up yet
+        obj, _ = cls.objects.get_or_create(pk=1, defaults={
+            "address":     "Not set",
+            "email":       "not@set.com",
+            "phone":       "Not set",
+            "description": "Not set",
+        })
+        return obj
+
+
+class Comment(models.Model):
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    body = models.TextField()
+    # admin approves before showing
+    approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Comment by {self.name} on {self.article.title}"
