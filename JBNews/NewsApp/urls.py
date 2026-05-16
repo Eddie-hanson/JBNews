@@ -17,5 +17,7 @@ urlpatterns = [
         views.CategoryView.as_view(),
         name="category"
     ),
-    path("contact/", views.contact, name="contact"),
+    # urls.py — add to urlpatterns
+
+    path("contact/", views.ContactView.as_view(), name="contact"),
 ]
