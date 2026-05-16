@@ -13,6 +13,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import ContactForm, CommentForm, NewsletterForm
 from .models import ContactMessage, SiteContact, Article, Category, NewsletterSubscriber
+from django.db import models as db_models
+from django.http import JsonResponse
 
 
 # ─────────────────────────────────────────
@@ -278,3 +280,36 @@ def unsubscribe(request, token):
     except NewsletterSubscriber.DoesNotExist:
         messages.error(request, "Invalid unsubscribe link.")
     return redirect("news:homepage")
+
+
+# views.py
+
+
+def search(request):
+    query = request.GET.get("q", "").strip()
+    results = []
+
+    if len(query) >= 2:          # only search after 2 characters
+        articles = (
+            Article.objects
+            .filter(status=Article.Status.PUBLISHED)
+            .filter(
+                db_models.Q(title__icontains=query) |
+                db_models.Q(excerpt__icontains=query) |
+                db_models.Q(category__name__icontains=query)
+            )
+            .order_by("-published_at")[:6]           # max 6 results
+        )
+
+        results = [
+            {
+                "title":    article.title,
+                "url":      f"/article/{article.slug}/",
+                "category": article.category.name if article.category else "",
+                "date":     article.published_at.strftime("%d %b %Y"),
+                "picture":  article.picture.url if article.picture else "",
+            }
+            for article in articles
+        ]
+
+    return JsonResponse({"results": results, "query": query})
