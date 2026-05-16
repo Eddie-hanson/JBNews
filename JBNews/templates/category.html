@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% load news_extras %}
+
+{% block title %}{{ category.name }} — News{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'news:homepage' %}">Home</a></li>
+            <li class="breadcrumb-item active">{{ category.name }}</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Category Page Start -->
+<div class="category-page">
+    <div class="container-fluid">
+
+        <!-- Category heading -->
+        <div class="category-heading">
+            <h1><i class="fas fa-align-justify"></i>{{ category.name }}</h1>
+            {% if category.description %}
+            <p class="category-description">{{ category.description }}</p>
+            {% endif %}
+            <span class="category-count">
+                {{ articles.count }} article{{ articles.count|pluralize }} found
+            </span>
+        </div>
+
+        <!-- Article Cards Grid -->
+        <div class="row">
+            {% for article in articles %}
+            <div class="col-lg-4 col-md-6">
+                <div class="article-card">
+
+                    <!-- TOP: image + title -->
+                    <div class="ac-top">
+                        <div class="ac-img">
+                            <a href="{% url 'news:article_detail' slug=article.slug %}">
+                                <img src="{{ article.picture.url }}"
+                                     alt="{{ article.title }}" />
+                            </a>
+                            <!-- Category badge on the image -->
+                            <a class="ac-category"
+                               href="{% url 'news:category' slug=article.category.slug %}">
+                                {{ article.category.name }}
+                            </a>
+                        </div>
+                        <div class="ac-title-wrap">
+                            <a class="ac-title"
+                               href="{% url 'news:article_detail' slug=article.slug %}">
+                                {{ article.title }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- BOTTOM: excerpt + meta + read more -->
+                    <div class="ac-bottom">
+                        <div class="ac-meta">
+                            <span class="ac-date">
+                                <i class="far fa-clock"></i>
+                                {{ article.published_at|time_ago }}
+                            </span>
+                            <span class="ac-views">
+                                <i class="far fa-eye"></i>
+                                {{ article.views }}
+                            </span>
+                        </div>
+                        <p class="ac-excerpt">
+                            {% if article.excerpt %}
+                                {{ article.excerpt|truncatewords:20 }}
+                            {% else %}
+                                {{ article.write_up|truncatewords:20 }}
+                            {% endif %}
+                        </p>
+                        <a class="ac-read-more"
+                           href="{% url 'news:article_detail' slug=article.slug %}">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="no-articles">No articles published in this category yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+<!-- Category Page End -->
+
+{% endblock %}
