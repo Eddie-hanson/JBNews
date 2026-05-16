@@ -70,9 +70,13 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav m-auto">
                             <a href="{% url 'news:homepage' %}" class="nav-item nav-link active">Home</a>
-                            <a href="#" class="nav-item nav-link">Sports</a>
-                            <a href="#" class="nav-item nav-link">Tech</a>
-                            <a href="#" class="nav-item nav-link">Fashion</a>
+                            {% for category in nav_categories %}
+<a href="{% url 'news:category' slug=category.slug %}"
+   class="nav-item nav-link
+          {% if request.resolver_match.kwargs.slug == category.slug %}active{% endif %}">
+    {{ category.name }}
+</a>
+{% endfor %}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Category</a>
                                 <div class="dropdown-menu">
@@ -85,7 +89,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <a href="#" class="nav-item nav-link">Single Page</a>
+                        
                             <a href="{% url 'news:contact' %}" class="nav-item nav-link">Contact Us</a>
                         </div>
                     </div>
