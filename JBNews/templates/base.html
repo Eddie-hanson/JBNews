@@ -43,7 +43,7 @@
                             <button><i class="fa fa-search"></i></button>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-4">
+                    {% comment %} <div class="col-lg-3 col-md-4">
                         <div class="social">
                             <a href=""><i class="fab fa-twitter"></i></a>
                             <a href=""><i class="fab fa-facebook"></i></a>
@@ -51,7 +51,37 @@
                             <a href=""><i class="fab fa-instagram"></i></a>
                             <a href=""><i class="fab fa-youtube"></i></a>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
+
+                    <div class="col-lg-3 col-md-4">
+    <div class="social">
+        {% if site_contact.twitter %}
+        <a href="{{ site_contact.twitter }}" target="_blank">
+            <i class="fab fa-twitter"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.facebook %}
+        <a href="{{ site_contact.facebook }}" target="_blank">
+            <i class="fab fa-facebook"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.linkedin %}
+        <a href="{{ site_contact.linkedin }}" target="_blank">
+            <i class="fab fa-linkedin"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.instagram %}
+        <a href="{{ site_contact.instagram }}" target="_blank">
+            <i class="fab fa-instagram"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.youtube %}
+        <a href="{{ site_contact.youtube }}" target="_blank">
+            <i class="fab fa-youtube"></i>
+        </a>
+        {% endif %}
+    </div>
+</div>
                 </div>
             </div>
         </div>
@@ -103,45 +133,86 @@
         <div class="footer">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h3 class="title">Useful Links</h3>
-                            <ul>
-                                <li><a href="#">Pellentesque</a></li>
-                                <li><a href="#">Aliquam</a></li>
-                                <li><a href="#">Fusce placerat</a></li>
-                                <li><a href="#">Nulla hendrerit</a></li>
-                                <li><a href="#">Maecenas</a></li>
-                            </ul>
-                        </div>
-                    </div>
+                   <!-- Useful Links — Categories from backend -->
+<div class="col-lg-3 col-md-6">
+    <div class="footer-widget">
+        <h3 class="title">Useful Links</h3>
+       
+        <div class="row">
+        <!-- Column 1: first 5 -->
+            <div class="col-6">
+                <ul>
+                    {% for category in footer_cats_col1 %}
+                    <li>
+                        <a href="{% url 'news:category' slug=category.slug %}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h3 class="title">Quick Links</h3>
-                            <ul>
-                                <li><a href="#">Posuere egestas</a></li>
-                                <li><a href="#">Sollicitudin</a></li>
-                                <li><a href="#">Luctus non</a></li>
-                                <li><a href="#">Duis tincidunt</a></li>
-                                <li><a href="#">Elementum</a></li>
-                            </ul>
-                        </div>
-                    </div>
+             <!-- Column 2: next 5 -->
+            <div class="col-6">
+                <ul>
+                    {% for category in footer_cats_col2 %}
+                    <li>
+                        <a href="{% url 'news:category' slug=category.slug %}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+</div>
+    </div>
+</div>
+
+<!-- Quick Links — static pages -->
+<div class="col-lg-3 col-md-6">
+    <div class="footer-widget">
+        <h3 class="title">Quick Links</h3>
+        <ul>
+            <li><a href="{% url 'news:homepage' %}">Home</a></li>
+            <li><a href="{% url 'news:contact' %}">Contact Us</a></li>
+        </ul>
+    </div>
+</div>
 
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-widget">
                             <h3 class="title">Get in Touch</h3>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>123 Terry Lane, New York, USA</p>
-                                <p><i class="fa fa-envelope"></i>email@example.com</p>
-                                <p><i class="fa fa-phone"></i>+123-456-7890</p>
+                             <p><i class="fa fa-map-marker"></i> {{ site_contact.address }}</p>
+    <p><i class="fa fa-envelope"></i> {{ site_contact.email }}</p>
+    <p><i class="fa fa-phone"></i> {{ site_contact.phone }}</p>
                                 <div class="social">
-                                    <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-facebook"></i></a>
-                                    <a href=""><i class="fab fa-linkedin"></i></a>
-                                    <a href=""><i class="fab fa-instagram"></i></a>
-                                    <a href=""><i class="fab fa-youtube"></i></a>
+                                    {% if site_contact.twitter %}
+        <a href="{{ site_contact.twitter }}" target="_blank">
+            <i class="fab fa-twitter"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.facebook %}
+        <a href="{{ site_contact.facebook }}" target="_blank">
+            <i class="fab fa-facebook"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.linkedin %}
+        <a href="{{ site_contact.linkedin }}" target="_blank">
+            <i class="fab fa-linkedin"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.instagram %}
+        <a href="{{ site_contact.instagram }}" target="_blank">
+            <i class="fab fa-instagram"></i>
+        </a>
+        {% endif %}
+        {% if site_contact.youtube %}
+        <a href="{{ site_contact.youtube }}" target="_blank">
+            <i class="fab fa-youtube"></i>
+        </a>
+        {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -152,11 +223,24 @@
                             <h3 class="title">Newsletter</h3>
                             <div class="newsletter">
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed porta dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra inceptos
-                                </p>
-                                <form>
-                                    <input class="form-control" type="email" placeholder="Your email here">
-                                    <button class="btn">Submit</button>
+                                    Subscribe to get the latest news delivered straight to your inbox.
+                                 </p>
+                                 {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} mb-2"
+                                    style="font-size:13px; padding: 6px 10px;">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                <form method="POST" action="{% url 'news:subscribe' %}" >
+                                     {% csrf_token %}
+                                    <input class="form-control"
+                                        type="email"
+                                        name="email"
+                                        placeholder="Your email here"
+                                        required>
+                                    <button class="btn" type="submit" >Submit</button>
                                 </form>
                             </div>
                         </div>
@@ -201,3 +285,6 @@
         <script src="{% static 'js/main.js'%}"></script>
     </body>
 </html>
+
+
+
