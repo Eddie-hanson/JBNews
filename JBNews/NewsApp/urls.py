@@ -20,4 +20,9 @@ urlpatterns = [
     # urls.py — add to urlpatterns
 
     path("contact/", views.ContactView.as_view(), name="contact"),
+
+    path("subscribe/",                views.subscribe,
+         name="subscribe"),
+    path("unsubscribe/<uuid:token>/",
+         views.unsubscribe,               name="unsubscribe"),
 ]
