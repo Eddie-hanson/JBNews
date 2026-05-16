@@ -37,21 +37,29 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-4">
+                    {% comment %} <div class="col-lg-6 col-md-4">
                         <div class="search">
                             <input type="text" placeholder="Search">
                             <button><i class="fa fa-search"></i></button>
                         </div>
-                    </div>
-                    {% comment %} <div class="col-lg-3 col-md-4">
-                        <div class="social">
-                            <a href=""><i class="fab fa-twitter"></i></a>
-                            <a href=""><i class="fab fa-facebook"></i></a>
-                            <a href=""><i class="fab fa-linkedin"></i></a>
-                            <a href=""><i class="fab fa-instagram"></i></a>
-                            <a href=""><i class="fab fa-youtube"></i></a>
-                        </div>
                     </div> {% endcomment %}
+                     <div class="col-lg-6 col-md-4">
+
+                <!-- Search wrapper — position:relative so dropdown sits under it -->
+                <div class="search" style="position:relative;">
+                    <input type="text"
+                           id="search-input"
+                           placeholder="Search"
+                           autocomplete="off" />
+                    <button><i class="fa fa-search"></i></button>
+
+                    <!-- Dropdown results panel -->
+                    <div id="search-results" class="search-dropdown">
+                        <div id="search-results-inner"></div>
+                    </div>
+                </div>
+
+            </div>
 
                     <div class="col-lg-3 col-md-4">
     <div class="social">
@@ -283,6 +291,7 @@
 
         <!-- Template Javascript -->
         <script src="{% static 'js/main.js'%}"></script>
+        <script src="{% static 'js/search.js'%}"></script>
     </body>
 </html>
 
