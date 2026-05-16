@@ -1,4 +1,4 @@
-from .models import ContactMessage, Comment
+from .models import ContactMessage, Comment, NewsletterSubscriber
 from django import forms
 from .models import ContactMessage
 
@@ -47,4 +47,16 @@ class CommentForm(forms.ModelForm):
                 "placeholder": "Write your comment...",
                 "rows":        4,
             }),
+        }
+
+
+class NewsletterForm(forms.ModelForm):
+    class Meta:
+        model = NewsletterSubscriber
+        fields = ["email"]
+        widgets = {
+            "email": forms.EmailInput(attrs={
+                "class":       "form-control",
+                "placeholder": "Your email here",
+            })
         }
