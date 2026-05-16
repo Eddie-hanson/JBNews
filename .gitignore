@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+newsenv/
+
+# Django
+db.sqlite3
+media/
+
+# Static files (if using collectstatic)
+staticfiles/
