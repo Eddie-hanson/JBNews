@@ -1,3 +1,6 @@
+from .models import ContactMessage, Article, Category, SiteContact, Article, Category
+from .forms import ContactForm, CommentForm
+from django.contrib import messages
 from django.shortcuts import render
 # TODO:Replce dropdown with Category and make it dynamic from the backend
 # TODO:Each news --> Title Cat write up date picture
@@ -14,7 +17,7 @@ from django.shortcuts import render
 
 # news/views.py
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, DetailView
 from django.db.models import Prefetch, F
 from .models import Article, Category
@@ -89,7 +92,7 @@ class HomepageView(TemplateView):
 
         context["popular_main"] = popular_published.first()      # big left card
         context["popular_list"] = popular_published[1:6]
-
+        context["nav_categories"] = Category.objects.filter(show_in_nav=True)
         # --- Navbar: all categories (for the dropdown) ---
         context["all_categories"] = Category.objects.all()
 
@@ -123,20 +126,41 @@ class ArticleDetailView(DetailView):
 
         # Related articles: same category, exclude current, latest 4
         article = self.object
-        if article.category:
-            context["related_articles"] = (
-                Article.objects
-                .filter(
-                    category=article.category,
-                    status=Article.Status.PUBLISHED
-                )
-                .exclude(pk=article.pk)
-                .order_by("-published_at")[:4]
-            )
-        else:
-            context["related_articles"] = Article.objects.none()
+        # Related articles
+        context["related_articles"] = (
+            Article.objects
+            .filter(category=article.category, status=Article.Status.PUBLISHED)
+            .exclude(pk=article.pk)
+            .order_by("-published_at")[:4]
+        ) if article.category else Article.objects.none()
 
+        # Approved comments + empty form
+        context["comments"] = article.comments.filter(approved=True)
+        context["comment_form"] = CommentForm()
+        context["nav_categories"] = Category.objects.filter(show_in_nav=True)
+        context["all_categories"] = Category.objects.all()
         return context
+
+    def post(self, request, *args, **kwargs):
+        article = self.get_object()
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.article = article
+            comment.save()
+            messages.success(
+                request, "Your comment has been submitted and is awaiting approval.")
+            return redirect("news:article_detail", slug=article.slug)
+        return render(request, "article_detail.html", {
+            "object":          article,
+            "comment_form":    comment_form,
+            "comments":        article.comments.filter(approved=True),
+            "related_articles": Article.objects.filter(
+                category=article.category,
+                status=Article.Status.PUBLISHED
+            ).exclude(pk=article.pk).order_by("-published_at")[:4],
+            "all_categories":  Category.objects.all(),
+        })
 
 
 # ─────────────────────────────────────────
@@ -162,10 +186,57 @@ class CategoryView(TemplateView):
             .order_by("-published_at")
         )
         # for navbar dropdown
+        context["nav_categories"] = Category.objects.filter(show_in_nav=True)
         context["all_categories"] = Category.objects.all()
 
         return context
 
 
-def contact(request):
-    return render(request, 'contact.html')
+class ContactView(TemplateView):
+    template_name = "contact.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Prepopulate empty form on GET
+        context["form"] = ContactForm()
+        context["nav_categories"] = Category.objects.filter(show_in_nav=True)
+        context["all_categories"] = Category.objects.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Your message has been sent. We will get back to you shortly."
+            )
+            form = ContactForm()  # reset to empty form after success
+        return render(request, "contact.html", {
+            "form": form,
+            "all_categories": Category.objects.all(),
+        })
+
+
+class ContactView(TemplateView):
+    template_name = "contact.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = ContactForm()
+        context["site_contact"] = SiteContact.get()   # ← add this
+        context["nav_categories"] = Category.objects.filter(show_in_nav=True)
+        context["all_categories"] = Category.objects.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has been sent.")
+            form = ContactForm()
+        return render(request, "contact.html", {
+            "form":           form,
+            "site_contact":   SiteContact.get(),        # ← add this
+            "all_categories": Category.objects.all(),
+        })
