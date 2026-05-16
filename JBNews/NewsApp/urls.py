@@ -25,4 +25,7 @@ urlpatterns = [
          name="subscribe"),
     path("unsubscribe/<uuid:token>/",
          views.unsubscribe,               name="unsubscribe"),
+    # urls.py
+
+    path("search/", views.search, name="search"),
 ]
