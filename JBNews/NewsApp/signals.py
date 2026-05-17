@@ -1,32 +1,36 @@
-# NewsApp/signals.py  ← create this file
+# NewsApp/signals.py
 
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from .models import Article
 
 
+# Store the previous status before save
+@receiver(pre_save, sender=Article)
+def store_previous_status(sender, instance, **kwargs):
+    if instance.pk:
+        try:
+            instance._previous_status = Article.objects.get(
+                pk=instance.pk
+            ).status
+        except Article.DoesNotExist:
+            instance._previous_status = None
+    else:
+        instance._previous_status = None   # brand new article
+
+
+# After save — send newsletter if status just flipped to PUBLISHED
 @receiver(post_save, sender=Article)
 def article_published_handler(sender, instance, created, **kwargs):
-    """
-    Fires every time an Article is saved.
-    Sends newsletter only when status flips TO published for the first time.
-    """
-    if instance.status == Article.Status.PUBLISHED:
-        # Only send once — check if it was previously unpublished
-        if not created:
-            try:
-                previous = Article.objects.get(pk=instance.pk)
-            except Article.DoesNotExist:
-                return
+    previous = getattr(instance, "_previous_status", None)
+    current = instance.status
 
-        # Import here to avoid circular imports
+    # Only send if it just became published — not on every save
+    just_published = (
+        current == Article.Status.PUBLISHED and
+        previous != Article.Status.PUBLISHED
+    )
+
+    if just_published:
         from .newsletter import send_newsletter
-        from .models import NewsletterSubscriber
-
-        # We need request for absolute URLs — use a stored flag instead
-        instance._newsletter_sent = getattr(
-            instance, "_newsletter_sent", False)
-        if not instance._newsletter_sent:
-            instance._newsletter_sent = True
-            # Store on instance so the view can trigger it with request context
-            instance._needs_newsletter = True
+        send_newsletter(instance)
