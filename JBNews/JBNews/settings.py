@@ -26,13 +26,43 @@ SECRET_KEY = 'django-insecure-0vu$4801m%13onrf31kcd03)h^n9blxihv^b)hzlef8@dks=rf
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# settings.py
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "298p7162-8000.uks1.devtunnels.ms",   # ← tunnel URL
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    # ← required for POST forms over tunnel
+    "https://298p7162-8000.uks1.devtunnels.ms",
+]
+# settings.py
+
+SITE_URL = "https://298p7162-8000.uks1.devtunnels.ms"
+
+
+# settings.py — production
+
+# SITE_URL = "https://www.jbnews.com"
+
+# ALLOWED_HOSTS = [
+#     "www.jbnews.com",
+#     "jbnews.com",
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://www.jbnews.com",
+#     "https://jbnews.com",
+# ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -137,3 +167,38 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = f"JBNews Ghana <{EMAIL_HOST_USER}>"
+
+JAZZMIN_SETTINGS = {
+    "site_title": "JB News Admin",
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "JBNews Admin Dashboard",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Admin Dashboard",
+
+    # Logo to use for your site, must be present in static files, used for brand on top left
+    "site_logo": "/img/Jbnew_logo (1).jpeg",
+    # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
+    "login_logo": "/img/Jbnew_logo (1).jpeg",
+    "site_logo_classes": "img-fluid",
+    "site_icon": "img/Jbnew_logo (1).jpeg",   # browser tab icon
+    "custom_css": "css/admin_custom.css",
+
+    # Welcome message on login page
+    "welcome_sign":      "Welcome to JBNews Admin",
+
+    # Copyright in footer
+    "copyright":         "JBNews",
+    "search_model": ["auth.User", "auth.Group"],
+
+    # "show_sidebar": True,
+
+    "topmenu_links": [
+        {"app": "NewsApp"},
+    ],
+}
+JAZZMIN_UI_TWEAKS = {
+
+    "theme": "simplex",
+    "dark_mode_theme": "darkly",
+}
