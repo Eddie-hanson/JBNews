@@ -28,4 +28,7 @@ urlpatterns = [
     # urls.py
 
     path("search/", views.search, name="search"),
+    # urls.py
+
+    path("ad/click/<int:ad_id>/", views.ad_click, name="ad_click"),
 ]
