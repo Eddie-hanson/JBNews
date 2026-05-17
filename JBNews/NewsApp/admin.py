@@ -30,24 +30,6 @@ class CategoryAdmin(admin.ModelAdmin):
 # ─────────────────────────────────────────
 
 class ProminenceFilter(admin.SimpleListFilter):
-    """Custom filter to quickly see homepage slot usage."""
-    title = "Homepage Slot"
-    parameter_name = "prominence"
-
-    def lookups(self, request, model_admin):
-        return Article.Prominence.choices
-
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(prominence=self.value())
-        return queryset
-
-
-# ─────────────────────────────────────────
-# Article Admin
-# ─────────────────────────────────────────
-
-class ProminenceFilter(admin.SimpleListFilter):
     title = "Homepage Slot"
     parameter_name = "prominence"
 
@@ -136,28 +118,18 @@ class ArticleAdmin(admin.ModelAdmin):
 
     @admin.action(description="Publish and send newsletter to subscribers")
     def publish_and_notify(self, request, queryset):
-        published_count = 0
-        skipped_count = 0
-
+        count = 0
         for article in queryset:
-            # Only publish if not already published
-            if article.status != Article.Status.PUBLISHED:
+            already_published = article.status == Article.Status.PUBLISHED
+            if not already_published:
                 article.status = Article.Status.PUBLISHED
                 article.published_at = timezone.now()
                 article.save()
-                published_count += 1
+                count += 1
             else:
-                skipped_count += 1
-
-            send_newsletter(article, request)
-
-        msg = f"Newsletter sent for {queryset.count()} article(s)."
-        if published_count:
-            msg += f" {published_count} newly published."
-        if skipped_count:
-            msg += f" {skipped_count} were already published."
-
-        self.message_user(request, msg)
+                send_newsletter(article)
+                count += 1
+        self.message_user(request, f"Newsletter sent for {count} article(s).")
 
     @admin.action(description="Archive selected articles")
     def archive_articles(self, request, queryset):
@@ -174,8 +146,6 @@ class ArticleAdmin(admin.ModelAdmin):
         updated = queryset.update(is_featured=False)
         self.message_user(
             request, f"{updated} article(s) removed from featured.")
-
-    # ── Custom display columns ─────────────
 
     def status_badge(self, obj):
         colours = {
@@ -241,16 +211,17 @@ class ArticleAdmin(admin.ModelAdmin):
         )
     homepage_slot_summary.short_description = "Homepage Slot Availability"
 
+    @admin.register(ContactMessage)
+    class ContactMessageAdmin(admin.ModelAdmin):
+        list_display = ("name", "email", "subject", "status", "submitted_at")
+        list_filter = ("status",)
+        search_fields = ("name", "email", "subject", "message")
+        readonly_fields = ("name", "email", "subject",
+                           "message", "submitted_at")
+        # mark read/replied directly from the list
+        list_editable = ("status",)
 
-@admin.register(ContactMessage)
-class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "subject", "status", "submitted_at")
-    list_filter = ("status",)
-    search_fields = ("name", "email", "subject", "message")
-    readonly_fields = ("name", "email", "subject", "message", "submitted_at")
-    list_editable = ("status",)   # mark read/replied directly from the list
-
-# admin.py — add this
+    # admin.py — add this
 
 
 @admin.register(SiteContact)
@@ -260,7 +231,7 @@ class SiteContactAdmin(admin.ModelAdmin):
             "fields": ("description", "address", "email", "phone")
         }),
         ("Social Media Links", {
-            "fields": ("twitter", "facebook", "linkedin", "instagram", "youtube"),
+            "fields": ("twitter", "facebook", "linkedin", "instagram", "youtube", "tiktok"),
             "description": "Leave blank to hide that icon on the contact page."
         }),
     )
