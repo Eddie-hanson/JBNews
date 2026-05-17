@@ -432,11 +432,74 @@ button.btn:hover {
 }
 
 /* ── Mobile ─────────────────────────────── */
-/* @media (max-width: 768px) {
-    .tn-left .tn-img  { min-height: 280px; flex: none; }
-    .tn-right .row    { height: auto; }
-    .tn-right .col-md-6 { height: 180px; }
-} */
+/* ── Top News Mobile Fix ────────────────── */
+@media (max-width: 767px) {
+  /* Left breaking news */
+  .tn-left .tn-img {
+    min-height: 260px;
+    flex: none;
+  }
+
+  /* Right column — stop being a fixed-height flex container */
+  .tn-right .row {
+    height: auto;
+    display: block; /* cancel flex so cards stack normally */
+  }
+
+  /* Each right card gets its own fixed height when stacked */
+  .tn-right .col-md-6 {
+    height: 200px; /* fixed per card, not % of parent */
+    padding: 4px;
+    width: 50%; /* 2 cards per row on mobile */
+    float: left;
+  }
+
+  /* Full width on very small screens */
+  @media (max-width: 480px) {
+    .tn-right .col-md-6 {
+      width: 100%;
+      height: 180px;
+    }
+  }
+}
+
+/* ── Category News Mobile Fix ───────────── */
+@media (max-width: 767px) {
+  /* Each category block needs breathing room */
+  .cat-news .col-md-6 {
+    margin-bottom: 30px; /* gap between category sections */
+  }
+
+  /* Cards inside the slider */
+  .cat-news .cn-img {
+    height: 180px;
+  }
+
+  /* Prevent slider cards overflowing */
+  .cat-news .row.cn-slider {
+    overflow: hidden;
+  }
+
+  /* Ensure images fill correctly */
+  .cat-news .cn-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* ── General section spacing on mobile ──── */
+@media (max-width: 767px) {
+  .top-news {
+    margin-bottom: 20px;
+    padding: 10px;
+  }
+
+  .cat-news {
+    margin-top: 20px; /* clear gap between top-news and cat-news */
+    padding: 10px;
+  }
+}
 
 /**********************************/
 /******* Category News CSS ********/
@@ -757,12 +820,34 @@ button.btn:hover {
 }
 
 /* ── Mobile ─────────────────────────────── */
-/* @media (max-width: 768px) {
-    .main-news .mn-list .mn-img {
-        width: 75px;
-        height: 75px;
-        min-width: 75px;
-    }} */
+/* ── Mobile: mn-list spacing ────────────── */
+@media (max-width: 767px) {
+  .main-news .mn-list {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0; /* subtle separator between cards */
+  }
+
+  .main-news .mn-list:last-child {
+    border-bottom: none; /* no line after the last card */
+    margin-bottom: 0;
+  }
+
+  .main-news .mn-list .mn-img {
+    width: 80px;
+    height: 65px;
+    min-width: 80px;
+  }
+
+  .main-news .mn-list .mn-content {
+    width: calc(100% - 95px);
+  }
+
+  .main-news .mn-list .mn-content a.mn-title {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+}
 
 /**********************************/
 /*********** Sidebar CSS **********/
