@@ -6,49 +6,37 @@ from django.conf import settings
 from .models import NewsletterSubscriber
 
 
-def send_newsletter(article, request):
-    """
-    Called automatically when an article is published.
-    Sends an email to all active subscribers.
-    """
+def send_newsletter(article):
     subscribers = NewsletterSubscriber.objects.filter(is_active=True)
 
     if not subscribers.exists():
         return
 
-    # Build the excerpt — use article.excerpt or first 30 words of write_up
+    # Build excerpt
     if article.excerpt:
         excerpt = article.excerpt
     else:
         words = article.write_up.split()
         excerpt = " ".join(words[:30]) + ("..." if len(words) > 30 else "")
 
-    # Full URL to the article
-    article_url = request.build_absolute_uri(
-        f"/article/{article.slug}/"
-    )
-
-    # Full URL to the article picture
-    article_picture_url = request.build_absolute_uri(
-        article.picture.url
-    )
+    # Build URLs using SITE_URL from settings instead of request
+    site_url = settings.SITE_URL.rstrip("/")
+    article_url = f"{site_url}/article/{article.slug}/"
+    picture_url = f"{site_url}{article.picture.url}" if article.picture else ""
 
     for subscriber in subscribers:
-        unsubscribe_url = request.build_absolute_uri(
-            f"/unsubscribe/{subscriber.token}/"
-        )
+        unsubscribe_url = f"{site_url}/unsubscribe/{subscriber.token}/"
 
         html_content = render_to_string("emails/newsletter.html", {
             "article":             article,
             "article_excerpt":     excerpt,
             "article_url":         article_url,
-            "article_picture_url": article_picture_url,
+            "article_picture_url": picture_url,
             "unsubscribe_url":     unsubscribe_url,
         })
 
         msg = EmailMultiAlternatives(
             subject=f"[JBNews] {article.title}",
-            # plain text fallback
             body=f"{article.title}\n\n{excerpt}\n\nRead more: {article_url}",
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[subscriber.email],
@@ -57,6 +45,6 @@ def send_newsletter(article, request):
 
         try:
             msg.send()
+            print(f"Newsletter sent to {subscriber.email}")
         except Exception as e:
-            # Log the error but don't crash — keep sending to other subscribers
             print(f"Failed to send to {subscriber.email}: {e}")
