@@ -1,10 +1,5 @@
 import uuid
 from django.db import models
-
-# Create your models here.
-
-# news/models.py
-
 from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
@@ -131,8 +126,6 @@ class Article(models.Model):
         return self.title
 
 
-# models.py — add below Article model
-
 class ContactMessage(models.Model):
 
     class Status(models.TextChoices):
@@ -157,8 +150,6 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.subject} — {self.name} ({self.email})"
 
-
-# models.py — add below ContactMessage
 
 class SiteContact(models.Model):
     address = models.CharField(max_length=255)
@@ -220,9 +211,6 @@ class Comment(models.Model):
         return f"Comment by {self.name} on {self.article.title}"
 
 
-# models.py
-
-
 class NewsletterSubscriber(models.Model):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
@@ -235,3 +223,66 @@ class NewsletterSubscriber(models.Model):
 
     def __str__(self):
         return self.email
+
+# models.py
+
+
+class Advertisement(models.Model):
+
+    class Placement(models.TextChoices):
+        SIDEBAR_MAIN = "sidebar_main",    "Sidebar — Main (large)"
+        SIDEBAR_SMALL_1 = "sidebar_small_1", "Sidebar — Small Left"
+        SIDEBAR_SMALL_2 = "sidebar_small_2", "Sidebar — Small Right"
+
+    title = models.CharField(
+        max_length=100, help_text="Internal name for this ad")
+    image = models.ImageField(upload_to="ads/%Y/%m/")
+    url = models.URLField(help_text="Where clicking the ad takes the user")
+    placement = models.CharField(
+        max_length=20,
+        choices=Placement.choices,
+        default=Placement.SIDEBAR_MAIN
+    )
+    is_active = models.BooleanField(default=True)
+    clicks = models.PositiveIntegerField(default=0)
+    impressions = models.PositiveIntegerField(default=0)
+    starts_at = models.DateField(null=True, blank=True,
+                                 help_text="Leave blank to start immediately")
+    ends_at = models.DateField(null=True, blank=True,
+                               help_text="Leave blank to run indefinitely")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title} ({self.get_placement_display()})"
+
+    def is_running(self):
+        from django.utils import timezone
+        today = timezone.now().date()
+        if not self.is_active:
+            return False
+        if self.starts_at and today < self.starts_at:
+            return False
+        if self.ends_at and today > self.ends_at:
+            return False
+        return True
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title} ({self.get_placement_display()})"
+
+    def is_running(self):
+        """Returns True if the ad should currently be displayed."""
+        from django.utils import timezone
+        today = timezone.now().date()
+        if not self.is_active:
+            return False
+        if self.starts_at and today < self.starts_at:
+            return False
+        if self.ends_at and today > self.ends_at:
+            return False
+        return True

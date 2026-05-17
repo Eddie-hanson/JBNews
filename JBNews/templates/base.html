@@ -113,7 +113,7 @@
 
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav m-auto">
-                            <a href="{% url 'news:homepage' %}" class="nav-item nav-link active">Home</a>
+                            <a href="{% url 'news:homepage' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'homepage' %}active{% endif %}">Home</a>
                             {% for category in nav_categories %}
 <a href="{% url 'news:category' slug=category.slug %}"
    class="nav-item nav-link

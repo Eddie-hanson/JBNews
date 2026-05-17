@@ -12,7 +12,8 @@ from django.db.models import Prefetch, F
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import ContactForm, CommentForm, NewsletterForm
-from .models import ContactMessage, SiteContact, Article, Category, NewsletterSubscriber
+from .models import (ContactMessage, SiteContact, Article,
+                     Category, NewsletterSubscriber, Advertisement)
 from django.db import models as db_models
 from django.http import JsonResponse
 
@@ -189,31 +190,31 @@ class CategoryView(TemplateView):
         return context
 
 
-class ContactView(TemplateView):
-    template_name = "contact.html"
+# class ContactView(TemplateView):
+#     template_name = "contact.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Prepopulate empty form on GET
-        context["form"] = ContactForm()
-        context["nav_categories"] = Category.objects.filter(show_in_nav=True)
-        context["all_categories"] = Category.objects.all()
-        context["site_contact"] = SiteContact.get()
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         # Prepopulate empty form on GET
+#         context["form"] = ContactForm()
+#         context["nav_categories"] = Category.objects.filter(show_in_nav=True)
+#         context["all_categories"] = Category.objects.all()
+#         context["site_contact"] = SiteContact.get()
+#         return context
 
-    def post(self, request, *args, **kwargs):
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Your message has been sent. We will get back to you shortly."
-            )
-            form = ContactForm()  # reset to empty form after success
-        return render(request, "contact.html", {
-            "form": form,
-            "all_categories": Category.objects.all(),
-        })
+#     def post(self, request, *args, **kwargs):
+#         form = ContactForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(
+#                 request,
+#                 "Your message has been sent. We will get back to you shortly."
+#             )
+#             form = ContactForm()  # reset to empty form after success
+#         return render(request, "contact.html", {
+#             "form": form,
+#             "all_categories": Category.objects.all(),
+#         })
 
 
 class ContactView(TemplateView):
@@ -282,9 +283,6 @@ def unsubscribe(request, token):
     return redirect("news:homepage")
 
 
-# views.py
-
-
 def search(request):
     query = request.GET.get("q", "").strip()
     results = []
@@ -313,3 +311,10 @@ def search(request):
         ]
 
     return JsonResponse({"results": results, "query": query})
+
+
+def ad_click(request, ad_id):
+    from django.shortcuts import get_object_or_404
+    ad = get_object_or_404(Advertisement, pk=ad_id)
+    Advertisement.objects.filter(pk=ad_id).update(clicks=F("clicks") + 1)
+    return redirect(ad.url)
