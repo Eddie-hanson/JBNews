@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.db import models as db_models
 from .models import Article, Category, ContactMessage, SiteContact, Comment, NewsletterSubscriber
 from .newsletter import send_newsletter
-
+from .models import Advertisement
 # Register your models here.
 
 
@@ -270,3 +270,37 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
     def deactivate_subscribers(self, request, queryset):
         updated = queryset.update(is_active=False)
         self.message_user(request, f"{updated} subscriber(s) deactivated.")
+
+
+@admin.register(Advertisement)
+class AdvertisementAdmin(admin.ModelAdmin):
+    list_display = ("title", "placement", "is_active", "clicks",
+                    "impressions", "starts_at", "ends_at", "ad_preview")
+    list_filter = ("placement", "is_active")
+    list_editable = ("is_active",)
+    readonly_fields = ("clicks", "impressions", "created_at", "ad_preview")
+    fieldsets = (
+        ("Ad Content", {
+            "fields": ("title", "image", "ad_preview", "url")
+        }),
+        ("Placement", {
+            "fields": ("placement", "is_active")
+        }),
+        ("Schedule", {
+            "description": "Leave both blank to run the ad immediately and indefinitely.",
+            "fields": ("starts_at", "ends_at")
+        }),
+        ("Performance", {
+            "classes": ("collapse",),
+            "fields": ("clicks", "impressions", "created_at")
+        }),
+    )
+
+    def ad_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:80px;border-radius:4px;object-fit:cover;" />',
+                obj.image.url
+            )
+        return "No image"
+    ad_preview.short_description = "Preview"
