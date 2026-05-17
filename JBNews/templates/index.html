@@ -236,8 +236,8 @@
                                 <h2><i class="fas fa-align-justify"></i>Tags</h2>
                                 <div class="tags">
                                     {% for category in all_categories %}
-                                     <a href="{% url 'news:category' slug=category.slug %}">
-                             {{ category.name }}
+                                    <a href="{% url 'news:category' slug=category.slug %}">
+                                    {{ category.name }}
                                     </a>
                                 {% empty %}
                                                             <p>No tags yet.</p>
@@ -246,25 +246,42 @@
                             </div>
 
                             <div class="sidebar-widget">
-                                <h2><i class="fas fa-align-justify"></i>Ads 1 column</h2>
+                                {% if ad_sidebar_main %}
+                                <h2><i class="fas fa-align-justify"></i>ADVERTIZE WITH US</h2>
                                 <div class="image">
-                                    <a href=""><img src="{% static 'img/adds-1.jpg'%}" alt="Image"></a>
+                                    <a href="{% url 'news:ad_click' ad_id=ad_sidebar_main.pk %}"><img src="{{ ad_sidebar_main.image.url }}"
+                                        alt="{{ad_sidebar_main.title}}"></a>
                                 </div>
+                                {% endif %}
                             </div>
 
                             <div class="sidebar-widget">
-                                <h2><i class="fas fa-align-justify"></i>Ads 2 column</h2>
+                                <h2><i class="fas fa-align-justify"></i>ADVERTIZE WITH US</h2>
                                 <div class="image">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <a href=""><img src="{% static 'img/adds-2.jpg'%}" alt="Image"></a>
+                                            {% if ad_sidebar_small_1 %}
+                                                <a href="{% url 'news:ad_click' ad_id=ad_sidebar_small_1.pk %}">
+                                                    <img src="{{ ad_sidebar_small_1.image.url }}"
+                                                        alt="{{ ad_sidebar_small_1.title }}"
+                                                        style="width:100%;object-fit:cover;border-radius:4px;" />
+                                                </a>
+                                                {% endif %}
                                         </div>
                                         <div class="col-sm-6">
-                                            <a href=""><img src="{% static 'img/adds-2.jpg'%}" alt="Image"></a>
+                                            {% if ad_sidebar_small_2 %}
+                                            <a href="{% url 'news:ad_click' ad_id=ad_sidebar_small_2.pk %}">
+                                                <img src="{{ ad_sidebar_small_2.image.url }}"
+                                                    alt="{{ ad_sidebar_small_2.title }}"
+                                                    style="width:100%;object-fit:cover;border-radius:4px;" />
+                                            </a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
+                               
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -274,3 +291,43 @@
 
 
         {% endblock %}
+
+
+
+
+        <!-- Main single ad -->
+<div class="sidebar-widget">
+    {% if ad_sidebar_main %}
+    <div class="image">
+        <a href="{% url 'news:ad_click' ad_id=ad_sidebar_main.pk %}">
+            <img src="{{ ad_sidebar_main.image.url }}"
+                 alt="{{ ad_sidebar_main.title }}"
+                 style="width:100%;object-fit:cover;border-radius:4px;" />
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Two small ads side by side -->
+<div class="sidebar-widget">
+    <div class="row">
+        <div class="col-sm-6">
+            {% if ad_sidebar_small_1 %}
+            <a href="{% url 'news:ad_click' ad_id=ad_sidebar_small_1.pk %}">
+                <img src="{{ ad_sidebar_small_1.image.url }}"
+                    alt="{{ ad_sidebar_small_1.title }}"
+                    style="width:100%;object-fit:cover;border-radius:4px;" />
+            </a>
+            {% endif %}
+        </div>
+        <div class="col-sm-6">
+            {% if ad_sidebar_small_2 %}
+            <a href="{% url 'news:ad_click' ad_id=ad_sidebar_small_2.pk %}">
+                <img src="{{ ad_sidebar_small_2.image.url }}"
+                    alt="{{ ad_sidebar_small_2.title }}"
+                    style="width:100%;object-fit:cover;border-radius:4px;" />
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
