@@ -7,7 +7,7 @@ import sys
 def main():
     """Run administrative tasks."""
     settings_module = (
-        "JBNews.productions_settings"
+        "JBNews.production_settings"
         if os.environ.get("VERCEL") == "true"
         else "JBNews.settings"
     )
