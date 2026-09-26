@@ -11,7 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 settings_module = (
-    "JBNews.productions_settings"
+    "JBNews.production_settings"
     if os.environ.get("VERCEL") == "true"
     else "JBNews.settings"
 )
