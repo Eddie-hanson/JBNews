@@ -6,7 +6,16 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'JBNews.settings')
+    settings_module = (
+        "JBNews.productions_settings"
+        if os.environ.get("VERCEL") == "true"
+        else "JBNews.settings"
+    )
+
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE",
+        settings_module
+    )
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
