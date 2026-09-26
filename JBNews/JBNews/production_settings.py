@@ -25,6 +25,7 @@ if PROD_DOMAIN:
         PROD_DOMAIN,
         f"www.{PROD_DOMAIN}",
     ])
+print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
 
 CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app"]
 if PROD_DOMAIN:
@@ -77,3 +78,7 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 X_FRAME_OPTIONS = "DENY"
+
+print("=== JBNEWS PRODUCTION SETTINGS LOADED ===")
+print("VERCEL:", os.environ.get("VERCEL"))
+print("VERCEL_URL:", os.environ.get("VERCEL_URL"))
