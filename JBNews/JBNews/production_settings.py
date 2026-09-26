@@ -7,11 +7,24 @@ from .base_settings import *
 DEBUG = False
 PROD_DOMAIN = config("PROD_DOMAIN", default="")
 
-ALLOWED_HOSTS = [".vercel.app"]
+# Hosts
+ALLOWED_HOSTS = []
+
+# Vercel automatically provides VERCEL_URL
+vercel_url = os.environ.get("VERCEL_URL")
+
+if vercel_url:
+    ALLOWED_HOSTS.append(vercel_url)
+
+# Allow all Vercel preview/production domains
+ALLOWED_HOSTS.append(".vercel.app")
+
+# Custom production domain
 if PROD_DOMAIN:
-    ALLOWED_HOSTS += [PROD_DOMAIN, f"www.{PROD_DOMAIN}"]
-if os.environ.get("VERCEL_URL"):
-    ALLOWED_HOSTS.append(os.environ["VERCEL_URL"])
+    ALLOWED_HOSTS.extend([
+        PROD_DOMAIN,
+        f"www.{PROD_DOMAIN}",
+    ])
 
 CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app"]
 if PROD_DOMAIN:
