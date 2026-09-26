@@ -12,7 +12,7 @@ import os
 from django.core.asgi import get_asgi_application
 
 settings_module = (
-    "JBNews.productions_settings"
+    "JBNews.production_settings"
     if os.environ.get("VERCEL") == "true"
     else "JBNews.settings"
 )
