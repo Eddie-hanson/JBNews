@@ -2,10 +2,10 @@
 
 from pathlib import Path
 import os
-from decouple import AutoConfig
-from decouple import config
+from decouple import config, AutoConfig
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 config = AutoConfig(search_path=BASE_DIR)
 
 SECRET_KEY = config("SECRET_KEY")
