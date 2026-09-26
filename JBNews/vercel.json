@@ -2,7 +2,7 @@
   "version": 2,
   "build": {
     "env": {
-      "DJANGO_SETTINGS_MODULE": "JBNews.productions_settings"
+      "DJANGO_SETTINGS_MODULE": "JBNews.production_settings"
     }
   },
   "builds": [
