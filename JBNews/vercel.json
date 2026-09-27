@@ -5,8 +5,7 @@
       "src": "JBNews/wsgi.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
-        "includeFiles": "JBNews/staticfiles/**"
+        "maxLambdaSize": "15mb"
       }
     }
   ],
