@@ -9,7 +9,7 @@
       }
     },
     {
-      "src": "JBNews/staticfiles/**",
+      "src": "staticfiles/**",
       "use": "@vercel/static"
     }
   ],
