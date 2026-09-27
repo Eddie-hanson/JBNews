@@ -12,5 +12,5 @@ newsenv/
 db.sqlite3
 media/
 
-# Static files (if using collectstatic)
-staticfiles/
+# # Static files (if using collectstatic)
+# staticfiles/
