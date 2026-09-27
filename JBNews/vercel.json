@@ -5,10 +5,22 @@
       "src": "JBNews/wsgi.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
-        "includeFiles": "JBNews/staticfiles/**"
+        "maxLambdaSize": "15mb"
       }
+    },
+    {
+      "src": "JBNews/staticfiles/**",
+      "use": "@vercel/static"
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "JBNews/wsgi.py" }]
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/JBNews/staticfiles/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "JBNews/wsgi.py"
+    }
+  ]
 }
