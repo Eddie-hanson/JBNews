@@ -19,12 +19,9 @@
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/staticfiles/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "JBNews/wsgi.py"
     }
-  ]
+  ],
+  "outputDirectory": "JBNews/staticfiles"
 }
