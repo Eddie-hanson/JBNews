@@ -177,11 +177,11 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Admin Dashboard",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "/img/Jbnew_logo (1).jpeg",
+    "site_logo": "/img/jbnews_logo.jpeg",
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "/img/Jbnew_logo (1).jpeg",
+    "login_logo": "/img/jbnews_logo.jpeg",
     "site_logo_classes": "img-fluid",
-    "site_icon": "img/Jbnew_logo (1).jpeg",   # browser tab icon
+    "site_icon": "img/jbnews_logo.jpeg",   # browser tab icon
     "custom_css": "css/admin_custom.css",
 
     # Welcome message on login page
