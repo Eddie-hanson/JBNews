@@ -4,12 +4,17 @@
     {
       "src": "JBNews/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.13"
+      }
     },
     {
-      "src": "build_files.sh",
+      "src": "build.sh",
       "use": "@vercel/static-build",
-      "config": { "distDir": "staticfiles" }
+      "config": {
+        "distDir": "JBNews/staticfiles"
+      }
     }
   ],
   "routes": [
@@ -21,6 +26,5 @@
       "src": "/(.*)",
       "dest": "JBNews/wsgi.py"
     }
-  ],
-  "outputDirectory": "staticfiles"
+  ]
 }
